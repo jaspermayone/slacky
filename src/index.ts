@@ -57,15 +57,33 @@ app.command(/.*?/, async ({ ack, body, client }) => {
       case "/toggle-visibility":
         // get the user who sent the command
         const user = body.user_id;
-        // send the user a message
+
+        // get the channel where the command was sent
+        const channel = body.channel_id;
+
+        // check if the bot is in the channel
+        const channelMembers = await client.conversations.members({
+          channel: channel,
+        });
+
+        // get the visibility of the channel
+        const visibility = await client.conversations.info({
+          channel: channel,
+        });
+
+        // get the visibility of the channel
+        const isPrivate = visibility.channel?.is_private;
+
+        // send a message to the channel
         await client.chat.postMessage({
-          channel: user,
-          text: "Hello, world!",
+          channel: channel,
+          text: `The channel is ${isPrivate ? "private" : "public"}`,
         });
 
         break;
     }
   } catch (error) {
+    console.log(error);
     blog(`Error in command handler: ${error}`, "error");
   }
 });
