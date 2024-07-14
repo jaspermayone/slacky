@@ -78,15 +78,26 @@ app.command(/.*?/, async ({ ack, body, client }) => {
         // get the visibility of the channel
         const isPrivate = visibility.channel?.is_private;
 
-        // send a message to the channel
-        await client.chat.postMessage({
-          channel: channel,
-          text: `The channel is ${isPrivate ? "private" : "public"}`,
-        });
+        // // send a message to the channel
+        // await client.chat.postMessage({
+        //   channel: channel,
+        //   text: `The channel is ${isPrivate ? "private" : "public"}`,
+        // });
 
         // change the visibility of the channel
 
         if (isPrivate) {
+          await client.chat.postEphemeral({
+            channel: channel,
+            user: user,
+            text: `Converting channel to public...`,
+          });
+
+          // await client.chat.postMessage({
+          //   channel: channel,
+          //   text: `:unlock: Channel is now public`,
+          // });
+
           let form = new URLSearchParams();
           form.append("token", xoxc);
           form.append("channel", channel);
@@ -100,6 +111,24 @@ app.command(/.*?/, async ({ ack, body, client }) => {
             }
           );
         } else {
+          await client.chat.postEphemeral({
+            channel: channel,
+            user: user,
+            text: `Converting channel to private...`,
+          });
+
+          let form = new URLSearchParams();
+          form.append("token", xoxc);
+          form.append("channel", channel);
+
+          await fetch(
+            `https://hackclub.slack.com/api/conversations.convertToPrivate`,
+            {
+              headers: { cookie, "User-Agent": "jasper@hackclub.com" },
+              body: form,
+              method: "POST",
+            }
+          );
         }
 
         break;
