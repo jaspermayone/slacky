@@ -21,6 +21,10 @@ const app = new App({
   receiver,
 });
 
+const xoxc = process.env.MAX_SLACK_BROWSER_TOKEN!;
+const xoxd = process.env.MAX_SLACK_COOKIE!;
+const cookie = `d=${xoxd}`;
+
 app.event(/.*/, async ({ event, client }) => {
   try {
     switch (event.type) {
@@ -79,6 +83,24 @@ app.command(/.*?/, async ({ ack, body, client }) => {
           channel: channel,
           text: `The channel is ${isPrivate ? "private" : "public"}`,
         });
+
+        // change the visibility of the channel
+
+        if (isPrivate) {
+          let form = new URLSearchParams();
+          form.append("token", xoxc);
+          form.append("channel", channel);
+
+          await fetch(
+            `https://hackclub.slack.com/api/conversations.convertToPublic`,
+            {
+              headers: { cookie, "User-Agent": "jasper@hacklub.com" },
+              body: form,
+              method: "POST",
+            }
+          );
+        } else {
+        }
 
         break;
     }

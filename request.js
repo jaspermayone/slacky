@@ -14,5 +14,4 @@ fetch("https://WORKSPACEURL.slack.com/api/conversations.convertToPublic?_x_id=f0
   },
   "referrerPolicy": "no-referrer",
   "body": "------WebKitFormBoundaryRTCuJwNJLmMlBuM8\r\nContent-Disposition: form-data; name=\"token\"\r\n\r\nXOXC HERE\r\n------WebKitFormBoundaryRTCuJwNJLmMlBuM8\r\nContent-Disposition: form-data; name=\"channel\"\r\n\r\nC07C9Q76JMT\r\n------WebKitFormBoundaryRTCuJwNJLmMlBuM8\r\nContent-Disposition: form-data; name=\"_x_reason\"\r\n\r\nconvert_to_public\r\n------WebKitFormBoundaryRTCuJwNJLmMlBuM8\r\nContent-Disposition: form-data; name=\"_x_mode\"\r\n\r\nonline\r\n------WebKitFormBoundaryRTCuJwNJLmMlBuM8\r\nContent-Disposition: form-data; name=\"_x_sonic\"\r\n\r\ntrue\r\n------WebKitFormBoundaryRTCuJwNJLmMlBuM8\r\nContent-Disposition: form-data; name=\"_x_app_name\"\r\n\r\nclient\r\n------WebKitFormBoundaryRTCuJwNJLmMlBuM8--\r\n",
-  "method": "POST"
 });
