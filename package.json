@@ -1,7 +1,7 @@
 {
-  "name": "slack-mirror",
+  "name": "slacky",
   "version": "0.0.0",
-  "description": "Mirroring Slack Channels Between Workspaces",
+  "description": "Small Slack Bot to Private / Unprivate Slack Channels without need for workspace owner",
   "main": "index.js",
   "maintainers": [
     {
