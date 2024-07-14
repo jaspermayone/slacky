@@ -52,7 +52,19 @@ app.action(/.*?/, async (args) => {
 app.command(/.*?/, async ({ ack, body, client }) => {
   try {
     await ack();
-    // This is not used
+
+    switch (body.command) {
+      case "/toggle-visibility":
+        // get the user who sent the command
+        const user = body.user_id;
+        // send the user a message
+        await client.chat.postMessage({
+          channel: user,
+          text: "Hello, world!",
+        });
+
+        break;
+    }
   } catch (error) {
     blog(`Error in command handler: ${error}`, "error");
   }
