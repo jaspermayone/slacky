@@ -1,7 +1,17 @@
 app:
   startup:
-    - "What'da know? I AM ALIVE! :heart-eng: :robot_face: and running in the env *${environment}*! :tada:"
-    - whoa! hey there! im functional ig... check me out in the env *${environment}*!
+    - "Starting up..."
+    - "Booting up..."
+    - "Loading..."
+    - "Initializing..."
+    - "Warming up..."
+    - "Firing up..."
+    - "Powering up..."
+    - "Activating..."
+    - "Engaging..."
+    - "Launching..."
+    - "Commencing..."
+    - "Preparing..."
 
   # demo multiline: |-
   #   Welcome hacker, it’s so good to see you! You know what this means, right? You’ve made it to Step 2 of the Hack Club Arcade! :summer::joystick:
