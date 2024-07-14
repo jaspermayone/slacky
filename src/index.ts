@@ -9,6 +9,7 @@ import { indexEndpoint } from "./endpoints";
 import { healthEndpoint } from "./endpoints/health";
 import { t } from "./lib/templates";
 import { blog, slog } from "./util/Logger";
+import { getChannelManagers } from "./util/getChannelManagers";
 
 const receiver = new ExpressReceiver({
   signingSecret: process.env.SLACK_SIGNING_SECRET!,
@@ -59,11 +60,12 @@ app.command(/.*?/, async ({ ack, body, client }) => {
 
     switch (body.command) {
       case "/toggle-visibility":
-        // get the user who sent the command
-        const user = body.user_id;
-
-        // get the channel where the command was sent
+        const userId = body.user_id;
+        const user = await client.users.info({
+          user: userId,
+        });
         const channel = body.channel_id;
+        let channelManagers = await getChannelManagers(channel);
 
         // check if the bot is in the channel
         const channelMembers = await client.conversations.members({
@@ -86,10 +88,19 @@ app.command(/.*?/, async ({ ack, body, client }) => {
 
         // change the visibility of the channel
 
+        if (!channelManagers.includes(userId) || !user.user!.is_admin) {
+          await client.chat.postEphemeral({
+            channel: channel,
+            user: userId,
+            text: `Only channel managers and workspace admins can preform this action`,
+          });
+          return;
+        }
+
         if (isPrivate) {
           await client.chat.postEphemeral({
             channel: channel,
-            user: user,
+            user: userId,
             text: `Converting channel to public...`,
           });
 
@@ -109,11 +120,22 @@ app.command(/.*?/, async ({ ack, body, client }) => {
               body: form,
               method: "POST",
             }
-          );
+          )
+            .then((r) => r.json())
+            .then(async (x) => {
+              console.log(x);
+
+              await client.chat.postEphemeral({
+                channel: channel,
+                user: userId,
+                text: `:unlock: Channel is now public`,
+              });
+            })
+            .catch((e) => console.log(e));
         } else {
           await client.chat.postEphemeral({
             channel: channel,
-            user: user,
+            user: userId,
             text: `Converting channel to private...`,
           });
 
@@ -128,7 +150,18 @@ app.command(/.*?/, async ({ ack, body, client }) => {
               body: form,
               method: "POST",
             }
-          );
+          )
+            .then((r) => r.json())
+            .then(async (x) => {
+              console.log(x);
+
+              await client.chat.postEphemeral({
+                channel: channel,
+                user: userId,
+                text: `:lock: Channel is now private`,
+              });
+            })
+            .catch((e) => console.log(e));
         }
 
         break;
